@@ -1,19 +1,17 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
-# Define the blueprint
 comments_bp = Blueprint("comments", __name__)
 
-@comments_bp.route("/comments", methods=["GET"])
-def get_comments():
-    return jsonify([
-        {"id": 1, "text": "This is great!"},
-        {"id": 2, "text": "Needs improvement."}
-    ])
+comments = [
+    {"id": 1, "candidate_id": 1, "comment": "Great leader!"},
+    {"id": 2, "candidate_id": 2, "comment": "Very promising candidate."}
+]
 
-@comments_bp.route("/comments", methods=["POST"])
-def add_comment():
-    data = request.json
-    text = data.get("text")
-    if not text:
-        return jsonify({"success": False, "message": "Missing text"}), 400
-    return jsonify({"success": True, "message": "Comment added!", "text": text})
+@comments_bp.route("/", methods=["GET"])
+def get_all_comments():
+    return jsonify(comments)
+
+@comments_bp.route("/candidate/<int:candidate_id>", methods=["GET"])
+def get_comments_by_candidate(candidate_id):
+    candidate_comments = [c for c in comments if c["candidate_id"] == candidate_id]
+    return jsonify(candidate_comments)

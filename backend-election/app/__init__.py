@@ -3,7 +3,7 @@ from app.routes.vote import vote_bp
 from app.routes.candidates import candidates_bp
 from app.routes.comments import comments_bp  # <--- IMPORT COMMENTS
 from app.database.db import init_db
-
+from app.routes.chhetra import chhetra_bp
 def create_app():
     app = Flask(__name__)
     app.config.from_object("app.config.Config")
@@ -12,7 +12,7 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(vote_bp, url_prefix="/api")
-    app.register_blueprint(candidates_bp, url_prefix="/api")
+    app.register_blueprint(candidates_bp, url_prefix="/api/candidates")
     app.register_blueprint(comments_bp, url_prefix="/api")  # now Python knows this
-
+    app.register_blueprint(chhetra_bp, url_prefix="/api/chhetra")
     return app

@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_migrate import Migrate
 from app.database.db import db, init_db
 from app.routes import register_routes
 
@@ -9,6 +10,14 @@ def create_app():
 
     # Initialize DB safely
     init_db(app)
+
+    # Initialize migrations (Flask-Migrate)
+    # This attaches Alembic migration support to the app and SQLAlchemy `db`.
+    try:
+        Migrate(app, db)
+    except Exception:
+        # If Flask-Migrate isn't installed in the environment yet, continue gracefully.
+        pass
 
     # Enable CORS using configured origins and restrict to API routes
     cors_origins = app.config.get("CORS_ORIGINS") or ["http://localhost:3000"]

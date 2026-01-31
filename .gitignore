@@ -1,0 +1,14 @@
+# Ignore local Python bytecode and virtual envs
+__pycache__/
+*.pyc
+
+# Ignore backend local sqlite DBs
+backend-election/instance/*.db
+
+# Node and build artifacts
+frontend-election/node_modules/
+frontend-election/.next/
+
+# OS files
+.DS_Store
+Thumbs.db

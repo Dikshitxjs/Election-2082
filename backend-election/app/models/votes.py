@@ -1,13 +1,13 @@
 from datetime import datetime
 from app.database.db import db
 
-class Comment(db.Model):
-    __tablename__ = "comments"
+class Vote(db.Model):
+    __tablename__ = "votes"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     candidate_id = db.Column(db.Integer, nullable=False)
-    message = db.Column(db.String, nullable=False)
+    vote_type = db.Column(db.String, nullable=False)  # "support" or "oppose"
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
@@ -15,6 +15,6 @@ class Comment(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "candidate_id": self.candidate_id,
-            "message": self.message,
+            "vote_type": self.vote_type,
             "timestamp": self.timestamp.isoformat()
         }

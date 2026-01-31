@@ -1,17 +1,32 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, request, jsonify
+from app.database.db import db
+from app.models.comment import Comment
 
 comments_bp = Blueprint("comments", __name__)
 
-comments = [
-    {"id": 1, "candidate_id": 1, "comment": "Great leader!"},
-    {"id": 2, "candidate_id": 2, "comment": "Very promising candidate."}
-]
+@comments_bp.route("/", methods=["POST"])
+def post_comment():
+    data = request.json or {}
 
-@comments_bp.route("/", methods=["GET"])
-def get_all_comments():
-    return jsonify(comments)
+    # Support anonymous comments: if no userId provided, use 0
+    user_id = data.get("userId") or 0
 
-@comments_bp.route("/candidate/<int:candidate_id>", methods=["GET"])
-def get_comments_by_candidate(candidate_id):
-    candidate_comments = [c for c in comments if c["candidate_id"] == candidate_id]
-    return jsonify(candidate_comments)
+    comment = Comment(
+        user_id=user_id,
+        candidate_id=data.get("candidateId"),
+        message=data.get("message", "")
+    )
+
+    try:
+        db.session.add(comment)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Failed to save comment", "detail": str(e)}), 500
+
+    comments = Comment.query.filter_by(candidate_id=data.get("candidateId"))\
+        .order_by(Comment.id.desc()).all()
+
+    return jsonify({
+        "comments": [{"id": c.id, "message": c.message} for c in comments]
+    })

@@ -15,7 +15,7 @@ def get_contact():
 @contact_bp.route("/", methods=["POST"])
 def post_contact():
     # Receiver for contact form. We require the user to include their email
-    # so the team can reply. Messages are logged for later processing.
+    
     data = request.get_json(silent=True) or {}
     name = data.get("name")
     message = data.get("message")
@@ -31,6 +31,6 @@ def post_contact():
     snippet = (message[:200] + "...") if len(message) > 200 else message
     current_app.logger.info("Contact form received: %s", {"name": name, "email": user_email, "message": snippet})
 
-    # TODO: enqueue email or persist message in a database in production.
+    # TODO: 
 
     return jsonify({"status": "received"}), 201

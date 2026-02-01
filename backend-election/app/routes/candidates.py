@@ -15,10 +15,10 @@ def get_candidates():
         oppose_count = Vote.query.filter_by(candidate_id=c.id, vote_type="oppose").count()
         comments = Comment.query.filter_by(candidate_id=c.id).order_by(Comment.id.desc()).limit(5).all()
 
-        # Build frontend-relative photo/path so browser can load from frontend server's public/ folder
+        # frontend-relative photo/path so browser can load from frontend server's public/ folder
         photo_url = c.photo if c.photo else f"/candidates/{c.id}.svg"
 
-        # Build party badge path (try partyIcon field later if you add it to DB)
+        #  party badge path (try partyIcon field later if you add it to DB)
         party_slug = (c.party or "").lower().replace(" ", "-")
         party_icon = f"/party-badges/{party_slug}.svg"
 
